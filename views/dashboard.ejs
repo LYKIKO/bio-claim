@@ -1,0 +1,2874 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - ProfileLink</title>
+    <link rel="preconnect" href="https://rsms.me/">
+    <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #2563EB;
+            --primary-dark: #1D4ED8;
+            --primary-light: #DBEAFE;
+            --black: #0F172A;
+            --dark-gray: #1E293B;
+            --gray: #64748B;
+            --light-gray: #F1F5F9;
+            --white: #FFFFFF;
+            --border: #E2E8F0;
+            --success: #10B981;
+            --error: #EF4444;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--light-gray);
+            color: var(--black);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 280px;
+            height: 100vh;
+            background: var(--white);
+            border-right: 1px solid var(--border);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .sidebar-header {
+            padding: 28px 24px 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .sidebar-brand {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            letter-spacing: -0.02em;
+        }
+
+        .sidebar-brand i {
+            font-size: 26px;
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 20px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 12px;
+            color: var(--gray);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            border: none;
+            background: none;
+            width: 100%;
+            font-family: inherit;
+        }
+
+        .nav-item:hover {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .nav-item.active {
+            background: var(--primary);
+            color: var(--white);
+            box-shadow: var(--shadow);
+        }
+
+        .nav-item i {
+            font-size: 18px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .sidebar-footer {
+            padding: 20px 16px;
+            border-top: 1px solid var(--border);
+        }
+
+        .user-mini {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            border-radius: 12px;
+            background: var(--light-gray);
+        }
+
+        .user-mini-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 16px;
+            flex-shrink: 0;
+            overflow: hidden;
+        }
+
+        .user-mini-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .user-mini-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .user-mini-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--black);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .user-mini-role {
+            font-size: 12px;
+            color: var(--gray);
+        }
+
+        /* Main Content */
+        .main-wrapper {
+            margin-left: 280px;
+            min-height: 100vh;
+            transition: margin-left 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .top-bar {
+            background: var(--white);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .page-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--black);
+            letter-spacing: -0.02em;
+        }
+
+        .page-title span {
+            color: var(--gray);
+            font-weight: 400;
+            font-size: 16px;
+            margin-left: 8px;
+        }
+
+        .top-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn-primary {
+            padding: 10px 20px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        /* Content */
+        .content {
+            padding: 32px;
+            max-width: 1400px;
+        }
+
+        /* Tab Content */
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Profile Hero */
+        .profile-hero {
+            background: var(--white);
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .profile-hero-banner {
+            height: 140px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            position: relative;
+        }
+
+        .profile-hero-body {
+            padding: 0 32px 32px;
+            position: relative;
+        }
+
+        .profile-hero-avatar-wrap {
+            margin-top: -50px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .profile-hero-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            font-weight: 700;
+            color: var(--primary);
+            flex-shrink: 0;
+            overflow: hidden;
+            cursor: pointer;
+            position: relative;
+            border: 4px solid var(--white);
+            box-shadow: var(--shadow-lg);
+            transition: transform 0.2s;
+        }
+
+        .profile-hero-avatar:hover {
+            transform: scale(1.03);
+        }
+
+        .profile-hero-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .avatar-overlay-icon {
+            position: absolute;
+            bottom: 2px;
+            right: 2px;
+            background: var(--primary);
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: white;
+            border: 3px solid var(--white);
+            pointer-events: none;
+        }
+
+        .profile-hero-info {
+            flex: 1;
+            min-width: 200px;
+            padding-top: 12px;
+        }
+
+        .profile-hero-name {
+            font-size: 26px;
+            font-weight: 800;
+            color: var(--black);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            letter-spacing: -0.02em;
+        }
+
+        .badge-verified {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: var(--success);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 40px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+
+        .profile-hero-meta {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            color: var(--gray);
+            font-size: 14px;
+        }
+
+        .profile-hero-actions {
+            display: flex;
+            gap: 10px;
+            padding-top: 12px;
+        }
+
+        .btn-outline {
+            padding: 10px 20px;
+            background: transparent;
+            color: var(--gray);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-outline:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: var(--primary-light);
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            padding: 24px 32px;
+            border-top: 1px solid var(--border);
+        }
+
+        .stat-card {
+            text-align: center;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: var(--gray);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            font-weight: 600;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .stat-value {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--black);
+            word-break: break-all;
+        }
+
+        /* Share Box */
+        .share-section {
+            background: var(--primary-light);
+            border-radius: 16px;
+            padding: 20px 24px;
+            margin: 0 32px 32px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .share-section-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            flex-shrink: 0;
+        }
+
+        .share-section-content {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .share-section-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--black);
+            margin-bottom: 2px;
+        }
+
+        .share-section-desc {
+            font-size: 13px;
+            color: var(--gray);
+        }
+
+        .share-input-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .share-input-group input {
+            flex: 1;
+            min-width: 220px;
+            padding: 10px 14px;
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--black);
+            font-size: 14px;
+            font-family: inherit;
+        }
+
+        .btn-copy {
+            padding: 10px 20px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+        }
+
+        .btn-copy:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        /* Edit Card */
+        .edit-card {
+            background: var(--white);
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            padding: 32px;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 24px;
+        }
+
+        .edit-card-header {
+            margin-bottom: 28px;
+        }
+
+        .edit-card-title {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--black);
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            letter-spacing: -0.02em;
+        }
+
+        .edit-card-subtitle {
+            color: var(--gray);
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            color: var(--black);
+            margin-bottom: 8px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .form-group label i {
+            color: var(--primary);
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            background: var(--light-gray);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: var(--black);
+            font-family: inherit;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: var(--white);
+            box-shadow: 0 0 0 4px var(--primary-light);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .save-button-wrapper {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 28px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+        }
+
+        .btn-save {
+            padding: 14px 36px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.25s;
+            font-family: inherit;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3);
+        }
+
+        .btn-save:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 28px rgba(37, 99, 235, 0.4);
+        }
+
+        /* Theme Layout */
+        .theme-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .theme-controls {
+            min-width: 0;
+        }
+
+        /* ===== COLLAPSIBLE CATEGORIES ===== */
+        .category-section {
+            margin-bottom: 12px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            background: var(--white);
+            transition: all 0.3s ease;
+        }
+
+        .category-section:hover {
+            border-color: var(--primary);
+        }
+
+        .category-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: var(--white);
+            user-select: none;
+            gap: 12px;
+        }
+
+        .category-header:hover {
+            background: var(--light-gray);
+        }
+
+        .category-header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .category-header-left .category-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: var(--primary-light);
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            flex-shrink: 0;
+            transition: all 0.2s ease;
+        }
+
+        .category-section:hover .category-header-left .category-icon {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        .category-header-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .category-header-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--black);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .category-header-title .badge-count {
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--gray);
+            background: var(--light-gray);
+            padding: 2px 8px;
+            border-radius: 12px;
+        }
+
+        .category-header-desc {
+            font-size: 12px;
+            color: var(--gray);
+            margin-top: 2px;
+        }
+
+        .category-header-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .category-status {
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--gray);
+            padding: 2px 10px;
+            border-radius: 12px;
+            background: var(--light-gray);
+        }
+
+        .category-status.active {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .category-chevron {
+            color: var(--gray);
+            font-size: 16px;
+            transition: transform 0.3s ease;
+            width: 20px;
+            text-align: center;
+        }
+
+        .category-section.open .category-chevron {
+            transform: rotate(180deg);
+        }
+
+        .category-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), padding 0.3s ease;
+            padding: 0 20px;
+        }
+
+        .category-section.open .category-content {
+            max-height: 800px;
+            padding: 0 20px 20px;
+        }
+
+        .category-content-inner {
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
+        }
+
+        /* Color picker groups */
+        .color-picker-group {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .color-picker-group input[type="color"] {
+            width: 40px;
+            height: 40px;
+            padding: 2px;
+            border-radius: 8px;
+            border: 2px solid var(--border);
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .color-picker-group input[type="text"] {
+            flex: 1;
+            padding: 10px 14px;
+            background: var(--light-gray);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+
+        .color-picker-group input[type="text"]:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: var(--white);
+            box-shadow: 0 0 0 3px var(--primary-light);
+        }
+
+        .color-picker-group .color-label {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--gray);
+            min-width: 60px;
+        }
+
+        /* Hover Colors Grid */
+        .hover-colors-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .hover-color-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            background: var(--light-gray);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .hover-color-item label {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--gray);
+            min-width: 70px;
+            margin: 0;
+        }
+
+        .hover-color-item input[type="color"] {
+            width: 32px;
+            height: 32px;
+            padding: 2px;
+            border-radius: 6px;
+            border: 2px solid var(--border);
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .hover-color-item input[type="text"] {
+            flex: 1;
+            padding: 6px 10px;
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 12px;
+            min-width: 0;
+        }
+
+        /* Toggle Switch */
+        .toggle-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            background: var(--light-gray);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            margin-bottom: 16px;
+        }
+
+        .toggle-wrapper label {
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--black);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 0;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 48px;
+            height: 26px;
+            flex-shrink: 0;
+            cursor: pointer;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            inset: 0;
+            background: var(--gray);
+            border-radius: 26px;
+            transition: all 0.3s ease;
+        }
+
+        .toggle-slider::before {
+            content: '';
+            position: absolute;
+            height: 20px;
+            width: 20px;
+            left: 3px;
+            bottom: 3px;
+            background: white;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .toggle-switch input:checked + .toggle-slider {
+            background: var(--primary);
+        }
+
+        .toggle-switch input:checked + .toggle-slider::before {
+            transform: translateX(22px);
+        }
+
+        .toggle-status {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--gray);
+            margin-left: auto;
+        }
+
+        .toggle-status.on {
+            color: var(--success);
+        }
+
+        .toggle-status.off {
+            color: var(--gray);
+        }
+
+        /* Hidden */
+        .hidden {
+            display: none !important;
+        }
+
+        #avatarInput {
+            display: none;
+        }
+
+        /* Toast */
+        .toast-container {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .toast {
+            padding: 16px 24px;
+            background: var(--success);
+            color: white;
+            border-radius: 14px;
+            box-shadow: var(--shadow-xl);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            animation: slideIn 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .toast-error {
+            background: var(--error);
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(40px) scale(0.95); }
+            to { opacity: 1; transform: translateX(0) scale(1); }
+        }
+
+        @keyframes slideOut {
+            from { opacity: 1; transform: translateX(0) scale(1); }
+            to { opacity: 0; transform: translateX(40px) scale(0.95); }
+        }
+
+        .toast-hide {
+            animation: slideOut 0.3s ease forwards;
+        }
+
+        /* Mobile Menu */
+        .menu-toggle {
+            display: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: var(--white);
+            color: var(--black);
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 20px;
+            margin-right: 12px;
+        }
+
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.5);
+            z-index: 999;
+            backdrop-filter: blur(4px);
+        }
+
+        .sidebar-overlay.active {
+            display: block;
+        }
+
+        /* Preset Buttons */
+        .preset-btn {
+            padding: 8px 16px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        .preset-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+            border-color: var(--primary);
+        }
+
+        /* Border Radius Presets */
+        .radius-presets {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 8px;
+        }
+
+        .radius-preset-btn {
+            padding: 6px 14px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            background: var(--white);
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+            transition: all 0.2s;
+            font-family: inherit;
+            color: var(--gray);
+        }
+
+        .radius-preset-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: var(--primary-light);
+        }
+
+        .radius-preset-btn.active {
+            border-color: var(--primary);
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Range input styling */
+        input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            height: 6px;
+            border-radius: 3px;
+            background: var(--border);
+            outline: none;
+            transition: background 0.2s;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--primary);
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: var(--shadow);
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.1);
+            box-shadow: var(--shadow-lg);
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--primary);
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+        }
+
+        /* ===== FULL PROFILE PREVIEW ===== */
+        .preview-wrapper {
+            background: linear-gradient(135deg, 
+                #0f0c29 0%, 
+                #302b63 25%, 
+                #24243e 50%, 
+                #1a1a2e 75%, 
+                #16213e 100%
+            );
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            border-radius: 16px;
+            padding: 30px;
+            min-height: 600px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            position: sticky;
+            top: 100px;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .preview-wrapper::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(88, 101, 242, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 50%, rgba(118, 75, 162, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 50% 80%, rgba(59, 165, 93, 0.1) 0%, transparent 50%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .preview-wrapper::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: 
+                radial-gradient(circle at 70% 30%, rgba(255,255,255,0.03) 0%, transparent 30%),
+                radial-gradient(circle at 30% 70%, rgba(255,255,255,0.02) 0%, transparent 30%);
+            z-index: 0;
+            pointer-events: none;
+            animation: floatBG 20s ease-in-out infinite alternate;
+        }
+
+        @keyframes floatBG {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            100% { transform: translate(-5%, -5%) rotate(5deg); }
+        }
+
+        /* Preview Profile Card - Matches profile.ejs exactly */
+        .preview-profile-card {
+            max-width: 420px;
+            width: 100%;
+            padding: 40px 32px;
+            border-radius: 24px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        .preview-profile-card .preview-avatar-wrapper {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 16px;
+            z-index: 2;
+        }
+
+        .preview-profile-card .preview-avatar {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #5865F2, #4752C4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            font-weight: 700;
+            color: white;
+            overflow: hidden;
+            border: 3px solid rgba(255,255,255,0.15);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+
+        .preview-profile-card .preview-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .preview-profile-card .preview-name {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 2px;
+            letter-spacing: -0.5px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .preview-profile-card .preview-username {
+            font-size: 15px;
+            margin-bottom: 8px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .preview-profile-card .preview-badge-row {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .preview-profile-card .preview-badge-verified {
+            display: inline-block;
+            background: rgba(59, 165, 93, 0.85);
+            backdrop-filter: blur(4px);
+            color: white;
+            padding: 4px 14px;
+            border-radius: 40px;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+            box-shadow: 0 4px 16px rgba(59, 165, 93, 0.2);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .preview-profile-card .preview-glass-badge {
+            display: inline-block;
+            padding: 2px 12px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(4px);
+            color: rgba(255,255,255,0.7);
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .preview-profile-card .preview-bio-section {
+            background: rgba(0,0,0,0.2);
+            backdrop-filter: blur(8px);
+            padding: 16px 20px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.06);
+            text-align: left;
+            margin-bottom: 16px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .preview-profile-card .preview-bio-section h3 {
+            font-size: 10px;
+            color: rgba(255,255,255,0.4);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .preview-profile-card .preview-bio-section p {
+            font-size: 14px;
+            color: rgba(255,255,255,0.85);
+            line-height: 1.6;
+            text-shadow: 0 1px 8px rgba(0,0,0,0.1);
+        }
+
+        .preview-profile-card .preview-sub-tabs {
+            display: flex;
+            gap: 8px;
+            background: rgba(0,0,0,0.2);
+            backdrop-filter: blur(8px);
+            border-radius: 12px;
+            padding: 4px;
+            margin-bottom: 16px;
+            border: 1px solid rgba(255,255,255,0.06);
+            position: relative;
+            z-index: 2;
+        }
+
+        .preview-profile-card .preview-sub-tab {
+            flex: 1;
+            background: transparent;
+            border: none;
+            padding: 8px 0;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            color: rgba(255,255,255,0.4);
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .preview-profile-card .preview-sub-tab.active {
+            background: rgba(255,255,255,0.08);
+            color: rgba(255,255,255,0.8);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        .preview-profile-card .preview-details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .preview-profile-card .preview-detail-item {
+            background: rgba(0,0,0,0.2);
+            backdrop-filter: blur(8px);
+            padding: 10px 12px;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.06);
+            text-align: left;
+            transition: all 0.3s;
+        }
+
+        .preview-profile-card .preview-detail-item .preview-detail-label {
+            font-size: 9px;
+            color: rgba(255,255,255,0.4);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 2px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .preview-profile-card .preview-detail-item .preview-detail-value {
+            font-size: 12px;
+            font-weight: 500;
+            color: rgba(255,255,255,0.8);
+            text-shadow: 0 1px 4px rgba(0,0,0,0.1);
+        }
+
+        .preview-profile-card .preview-social-links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .preview-profile-card .preview-social-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
+            background: rgba(0,0,0,0.2);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 8px;
+            color: rgba(255,255,255,0.5);
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .preview-profile-card .preview-social-link i {
+            font-size: 14px;
+        }
+
+        .preview-profile-card .preview-footer {
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid rgba(255,255,255,0.06);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .preview-profile-card .preview-join-date {
+            font-size: 11px;
+            color: rgba(255,255,255,0.3);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .preview-profile-card .preview-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .preview-profile-card .preview-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 20px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .preview-profile-card .preview-btn-primary {
+            background: rgba(88,101,242,0.8);
+            backdrop-filter: blur(4px);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .preview-profile-card .preview-btn-secondary {
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(4px);
+            color: rgba(255,255,255,0.6);
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .theme-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .preview-wrapper {
+                min-height: 400px;
+                position: relative;
+                top: 0;
+                order: -1;
+                padding: 20px;
+            }
+
+            .preview-profile-card {
+                max-width: 100%;
+                padding: 24px 20px;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main-wrapper {
+                margin-left: 0;
+            }
+
+            .menu-toggle {
+                display: flex;
+            }
+
+            .content {
+                padding: 16px;
+            }
+
+            .top-bar {
+                padding: 12px 16px;
+            }
+
+            .page-title {
+                font-size: 18px;
+            }
+
+            .page-title span {
+                font-size: 13px;
+                display: block;
+                margin-left: 0;
+            }
+
+            .profile-hero-body {
+                padding: 0 16px 20px;
+            }
+
+            .profile-hero-avatar-wrap {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+
+            .profile-hero-info {
+                text-align: center;
+            }
+
+            .profile-hero-meta {
+                justify-content: center;
+            }
+
+            .profile-hero-actions {
+                justify-content: center;
+                width: 100%;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+                padding: 16px;
+                gap: 12px;
+            }
+
+            .share-section {
+                margin: 0 16px 20px;
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .share-input-group {
+                width: 100%;
+            }
+
+            .share-input-group input {
+                min-width: 0;
+                width: 100%;
+            }
+
+            .edit-card {
+                padding: 20px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .save-button-wrapper {
+                justify-content: center;
+            }
+
+            .btn-save {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .preview-wrapper {
+                min-height: 350px;
+                padding: 16px;
+            }
+
+            .preview-profile-card {
+                padding: 20px 16px;
+            }
+
+            .preview-profile-card .preview-avatar-wrapper {
+                width: 70px;
+                height: 70px;
+            }
+
+            .preview-profile-card .preview-avatar {
+                font-size: 28px;
+            }
+
+            .preview-profile-card .preview-name {
+                font-size: 22px;
+            }
+
+            .preview-profile-card .preview-details-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .category-header {
+                padding: 14px 16px;
+            }
+
+            .category-content {
+                padding: 0 16px;
+            }
+
+            .category-section.open .category-content {
+                padding: 0 16px 16px;
+            }
+
+            .color-picker-group {
+                flex-wrap: wrap;
+            }
+
+            .color-picker-group .color-label {
+                min-width: 100%;
+            }
+
+            .hover-colors-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .toggle-wrapper {
+                flex-wrap: wrap;
+            }
+
+            .toggle-status {
+                margin-left: 0;
+                width: 100%;
+            }
+
+            .radius-presets {
+                gap: 6px;
+            }
+
+            .radius-preset-btn {
+                padding: 4px 10px;
+                font-size: 11px;
+            }
+
+            .category-header-title {
+                font-size: 13px;
+            }
+
+            .category-header-desc {
+                font-size: 11px;
+            }
+
+            .category-header-left .category-icon {
+                width: 28px;
+                height: 28px;
+                font-size: 14px;
+            }
+
+            .preview-profile-card .preview-social-links {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .preview-profile-card .preview-actions {
+                flex-direction: column;
+            }
+        }
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: var(--black);
+            font-weight: 600;
+            font-size: 18px;
+            letter-spacing: -0.02em;
+        }
+
+        .nav-brand-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--black);
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav-brand-icon svg {
+            width: 16px;
+            height: 16px;
+            stroke: var(--white);
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="/dashboard" class="nav-brand">
+                <div class="nav-brand-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                    </svg>
+                </div>
+                ProfileLink
+            </a>
+        </div>
+
+        <nav class="sidebar-nav">
+            <a href="#" class="nav-item" data-tab="profile">
+                <i class="bi bi-person"></i> Profile
+            </a>
+            <a href="#" class="nav-item active" data-tab="theme">
+                <i class="bi bi-palette"></i> Theme
+            </a>
+            <a href="/<%= user.customUrl %>" target="_blank" class="nav-item">
+                <i class="bi bi-eye"></i> View Profile
+            </a>
+            <a href="#" class="nav-item" data-tab="settings">
+                <i class="bi bi-gear"></i> Settings
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="user-mini">
+                <div class="user-mini-avatar">
+                    <% 
+                        let miniAvatarUrl = '';
+                        if (user.avatar) {
+                            miniAvatarUrl = '/' + user.avatar;
+                        } else if (user.avatarDiscord) {
+                            miniAvatarUrl = 'https://cdn.discordapp.com/avatars/' + user.discordId + '/' + user.avatarDiscord + '.png';
+                        }
+                    %>
+                    <% if (miniAvatarUrl) { %>
+                        <img src="<%= miniAvatarUrl %>" alt="Avatar" />
+                    <% } else { %>
+                        <%= user.globalName ? user.globalName.charAt(0).toUpperCase() : 'U' %>
+                    <% } %>
+                </div>
+                <div class="user-mini-info">
+                    <div class="user-mini-name"><%= user.globalName || user.username %></div>
+                    <div class="user-mini-role">@<%= user.username %></div>
+                </div>
+            </div>
+            <form action="/logout" method="POST" style="margin-top: 12px;">
+                <button type="submit" class="nav-item" style="color: var(--error);">
+                    <i class="bi bi-box-arrow-right"></i> Logout
+                </button>
+            </form>
+        </div>
+    </aside>
+
+    <div class="main-wrapper">
+        <header class="top-bar">
+            <div style="display: flex; align-items: center;">
+                <button class="menu-toggle" id="menuToggle" onclick="toggleSidebar()">
+                    <i class="bi bi-list"></i>
+                </button>
+                <h1 class="page-title" id="pageTitle">Theme <span>Customize your profile</span></h1>
+            </div>
+            <div class="top-actions">
+                <a href="/<%= user.customUrl %>" target="_blank" class="btn-primary">
+                    <i class="bi bi-eye"></i> View
+                </a>
+            </div>
+        </header>
+
+        <main class="content">
+            <!-- Profile Tab -->
+            <div id="profileTab" class="tab-content">
+                <!-- Profile Hero -->
+                <div class="profile-hero">
+                    <div class="profile-hero-banner"></div>
+                    <div class="profile-hero-body">
+                        <div class="profile-hero-avatar-wrap">
+                            <div class="profile-hero-avatar" id="avatarTrigger">
+                                <% 
+                                    let avatarUrl = '';
+                                    if (user.avatar) {
+                                        avatarUrl = '/' + user.avatar;
+                                    } else if (user.avatarDiscord) {
+                                        avatarUrl = 'https://cdn.discordapp.com/avatars/' + user.discordId + '/' + user.avatarDiscord + '.png';
+                                    }
+                                %>
+                                <% if (avatarUrl) { %>
+                                    <img src="<%= avatarUrl %>" alt="Avatar" id="avatarImg" />
+                                <% } else { %>
+                                    <span id="avatarPlaceholder"><%= user.globalName ? user.globalName.charAt(0).toUpperCase() : 'U' %></span>
+                                <% } %>
+                                <span class="avatar-overlay-icon"><i class="bi bi-camera-fill"></i></span>
+                            </div>
+                            <div class="profile-hero-info">
+                                <div class="profile-hero-name">
+                                    <%= user.globalName || user.username %>
+                                </div>
+                                <div class="profile-hero-meta">
+                                    <span><i class="bi bi-at"></i> <%= user.username %></span>
+                                </div>
+                            </div>
+                            <div class="profile-hero-actions">
+                                <button class="btn-outline" onclick="copyUrl()">
+                                    <i class="bi bi-share"></i> Share
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-label"><i class="bi bi-hash"></i> Discord ID</div>
+                            <div class="stat-value"><%= user.discordId %></div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label"><i class="bi bi-envelope"></i> Email</div>
+                            <div class="stat-value"><%= user.email || 'Not provided' %></div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label"><i class="bi bi-calendar3"></i> Joined</div>
+                            <div class="stat-value"><%= profile ? new Date(profile.createdAt).toLocaleDateString() : 'N/A' %></div>
+                        </div>
+                    </div>
+
+                    <div class="share-section">
+                        <div class="share-section-icon">
+                            <i class="bi bi-share-fill"></i>
+                        </div>
+                        <div class="share-section-content">
+                            <div class="share-section-title">Share Your Profile</div>
+                            <div class="share-section-desc">Copy your link and share it anywhere.</div>
+                        </div>
+                        <div class="share-input-group">
+                            <input type="text" id="profileUrl" value="https://bioweb-six.vercel.app/<%= user.customUrl %>" readonly />
+                            <button class="btn-copy" onclick="copyUrl()">
+                                <i class="bi bi-clipboard"></i> Copy
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Edit Section -->
+                <div class="edit-card">
+                    <div class="edit-card-header">
+                        <h2 class="edit-card-title"><i class="bi bi-pencil-square"></i> Edit Profile</h2>
+                        <p class="edit-card-subtitle">Update your bio, social links, and avatar.</p>
+                    </div>
+
+                    <form action="/update-profile" method="POST" id="profileForm" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label for="bio"><i class="bi bi-chat"></i> Bio</label>
+                            <textarea id="bio" name="bio" placeholder="Tell the world about yourself..."><%= profile.bio || '' %></textarea>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="twitter"><i class="bi bi-twitter"></i> Twitter</label>
+                                <input type="text" id="twitter" name="twitter" placeholder="https://twitter.com/username" value="<%= profile.twitter || '' %>" />
+                            </div>
+                            <div class="form-group">
+                                <label for="github"><i class="bi bi-github"></i> GitHub</label>
+                                <input type="text" id="github" name="github" placeholder="https://github.com/username" value="<%= profile.github || '' %>" />
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="instagram"><i class="bi bi-instagram"></i> Instagram</label>
+                                <input type="text" id="instagram" name="instagram" placeholder="https://instagram.com/username" value="<%= profile.instagram || '' %>" />
+                            </div>
+                            <div class="form-group">
+                                <label for="youtube"><i class="bi bi-youtube"></i> YouTube</label>
+                                <input type="text" id="youtube" name="youtube" placeholder="https://youtube.com/@username" value="<%= profile.youtube || '' %>" />
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="linkedin"><i class="bi bi-linkedin"></i> LinkedIn</label>
+                                <input type="text" id="linkedin" name="linkedin" placeholder="https://linkedin.com/in/username" value="<%= profile.linkedin || '' %>" />
+                            </div>
+                            <div class="form-group">
+                                <label for="location"><i class="bi bi-geo-alt"></i> Location</label>
+                                <input type="text" id="location" name="location" placeholder="City, Country" value="<%= profile.location || '' %>" />
+                            </div>
+                        </div>
+
+                        <input type="file" id="avatarInput" name="avatar" accept="image/*" />
+
+                        <div class="save-button-wrapper">
+                            <button type="submit" class="btn-save" id="saveBtn">
+                                <i class="bi bi-cloud-upload"></i> Save Profile
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Theme Tab -->
+            <div id="themeTab" class="tab-content active">
+                <div class="edit-card">
+                    <div class="edit-card-header">
+                        <h2 class="edit-card-title"><i class="bi bi-palette"></i> Customize Theme</h2>
+                        <p class="edit-card-subtitle">Customize how your profile card looks. Changes update in real-time.</p>
+                    </div>
+
+                    <div class="theme-layout">
+                        <!-- Theme Controls -->
+                        <div class="theme-controls">
+                            <form id="themeForm">
+                                <!-- Category: Glass Effect -->
+                                <div class="category-section" id="categoryGlass">
+                                    <div class="category-header" onclick="toggleCategory('categoryGlass')">
+                                        <div class="category-header-left">
+                                            <div class="category-icon">
+                                                <i class="bi bi-window"></i>
+                                            </div>
+                                            <div class="category-header-info">
+                                                <div class="category-header-title">
+                                                    Glass Effect
+                                                    <span class="badge-count">2 options</span>
+                                                </div>
+                                                <div class="category-header-desc">Frosted glass appearance with blur</div>
+                                            </div>
+                                        </div>
+                                        <div class="category-header-right">
+                                            <span class="category-status <%= profile.theme && profile.theme.glassEffect ? 'active' : '' %>">
+                                                <%= profile.theme && profile.theme.glassEffect ? 'ON' : 'OFF' %>
+                                            </span>
+                                            <span class="category-chevron"><i class="bi bi-chevron-down"></i></span>
+                                        </div>
+                                    </div>
+                                    <div class="category-content">
+                                        <div class="category-content-inner">
+                                            <div class="toggle-wrapper">
+                                                <div class="toggle-switch">
+                                                    <input type="checkbox" id="glassToggle" <%= profile.theme && profile.theme.glassEffect ? 'checked' : '' %>>
+                                                    <span class="toggle-slider"></span>
+                                                </div>
+                                                <label for="glassToggle">
+                                                    Enable Glass Effect
+                                                </label>
+                                                <span class="toggle-status" id="glassStatus">
+                                                    <%= profile.theme && profile.theme.glassEffect ? 'ON' : 'OFF' %>
+                                                </span>
+                                            </div>
+
+                                            <div id="glassControls" class="<%= profile.theme && profile.theme.glassEffect ? '' : 'hidden' %>">
+                                                <div class="form-group">
+                                                    <label><i class="bi bi-eyedropper"></i> Transparency <span id="transparencyValue"><%= profile.theme && profile.theme.cardTransparency ? (parseFloat(profile.theme.cardTransparency) * 100).toFixed(0) : '95' %>%</span></label>
+                                                    <input type="range" id="cardTransparency" min="0" max="100" step="1" value="<%= profile.theme && profile.theme.cardTransparency ? parseFloat(profile.theme.cardTransparency) * 100 : '95' %>">
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label><i class="bi bi-eye"></i> Blur <span id="blurValue"><%= profile.theme && profile.theme.cardBlur ? profile.theme.cardBlur : '10px' %></span></label>
+                                                    <input type="range" id="cardBlur" min="0" max="30" step="1" value="<%= profile.theme && profile.theme.cardBlur ? parseInt(profile.theme.cardBlur) : '10' %>">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Category: Colors -->
+                                <div class="category-section" id="categoryColors">
+                                    <div class="category-header" onclick="toggleCategory('categoryColors')">
+                                        <div class="category-header-left">
+                                            <div class="category-icon">
+                                                <i class="bi bi-fill"></i>
+                                            </div>
+                                            <div class="category-header-info">
+                                                <div class="category-header-title">
+                                                    Colors
+                                                    <span class="badge-count">6 presets</span>
+                                                </div>
+                                                <div class="category-header-desc">Background color and quick presets</div>
+                                            </div>
+                                        </div>
+                                        <div class="category-header-right">
+                                            <span class="category-chevron"><i class="bi bi-chevron-down"></i></span>
+                                        </div>
+                                    </div>
+                                    <div class="category-content">
+                                        <div class="category-content-inner">
+                                            <div class="form-group">
+                                                <label><i class="bi bi-palette"></i> Card Background</label>
+                                                <div class="color-picker-group">
+                                                    <span class="color-label">Color</span>
+                                                    <input type="color" id="cardColor" value="<%= profile.theme && profile.theme.cardColor ? profile.theme.cardColor : '#1a1a1a' %>">
+                                                    <input type="text" id="cardColorText" value="<%= profile.theme && profile.theme.cardColor ? profile.theme.cardColor : '#1a1a1a' %>" placeholder="#RRGGBB">
+                                                </div>
+                                            </div>
+
+                                            <div style="margin-top: 12px;">
+                                                <label style="display: block; font-size: 12px; font-weight: 500; color: var(--gray); margin-bottom: 8px;">Quick Presets</label>
+                                                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                                                    <button type="button" class="preset-btn" style="background: #1a1a1a; color: white;" onclick="setPreset('#1a1a1a', 95, 10)">Dark</button>
+                                                    <button type="button" class="preset-btn" style="background: rgba(255,255,255,0.15); color: #1a1a1a;" onclick="setPreset('rgba(255,255,255,0.15)', 15, 20)">Light</button>
+                                                    <button type="button" class="preset-btn" style="background: #2d1b69; color: white;" onclick="setPreset('#2d1b69', 85, 12)">Purple</button>
+                                                    <button type="button" class="preset-btn" style="background: #1a472a; color: white;" onclick="setPreset('#1a472a', 85, 12)">Forest</button>
+                                                    <button type="button" class="preset-btn" style="background: #8b0000; color: white;" onclick="setPreset('#8b0000', 85, 12)">Ruby</button>
+                                                    <button type="button" class="preset-btn" style="background: #0a0a0a; color: white;" onclick="setPreset('#0a0a0a', 90, 15)">Pure Black</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Category: Border Radius -->
+                                <div class="category-section" id="categoryRadius">
+                                    <div class="category-header" onclick="toggleCategory('categoryRadius')">
+                                        <div class="category-header-left">
+                                            <div class="category-icon">
+                                                <i class="bi bi-border-radius"></i>
+                                            </div>
+                                            <div class="category-header-info">
+                                                <div class="category-header-title">
+                                                    Border Radius
+                                                    <span class="badge-count">5 presets</span>
+                                                </div>
+                                                <div class="category-header-desc">Card corner rounding</div>
+                                            </div>
+                                        </div>
+                                        <div class="category-header-right">
+                                            <span class="category-chevron"><i class="bi bi-chevron-down"></i></span>
+                                        </div>
+                                    </div>
+                                    <div class="category-content">
+                                        <div class="category-content-inner">
+                                            <div class="form-group">
+                                                <label><i class="bi bi-arrows-expand"></i> Radius: <span id="radiusValue"><%= profile.theme && profile.theme.borderRadius ? profile.theme.borderRadius : '20' %>px</span></label>
+                                                <input type="range" id="borderRadius" min="0" max="50" step="1" value="<%= profile.theme && profile.theme.borderRadius ? profile.theme.borderRadius : '20' %>">
+                                            </div>
+
+                                            <div class="radius-presets">
+                                                <button type="button" class="radius-preset-btn" data-radius="0" onclick="setRadius(0)">Square</button>
+                                                <button type="button" class="radius-preset-btn" data-radius="8" onclick="setRadius(8)">8px</button>
+                                                <button type="button" class="radius-preset-btn active" data-radius="20" onclick="setRadius(20)">20px</button>
+                                                <button type="button" class="radius-preset-btn" data-radius="30" onclick="setRadius(30)">30px</button>
+                                                <button type="button" class="radius-preset-btn" data-radius="50" onclick="setRadius(50)">Pill</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Category: Sub Tab Styles -->
+                                <div class="category-section" id="categorySubTab">
+                                    <div class="category-header" onclick="toggleCategory('categorySubTab')">
+                                        <div class="category-header-left">
+                                            <div class="category-icon">
+                                                <i class="bi bi-layout-three-columns"></i>
+                                            </div>
+                                            <div class="category-header-info">
+                                                <div class="category-header-title">
+                                                    Sub Tab Styles
+                                                    <span class="badge-count">5 options</span>
+                                                </div>
+                                                <div class="category-header-desc">Details grid & social links appearance</div>
+                                            </div>
+                                        </div>
+                                        <div class="category-header-right">
+                                            <span class="category-chevron"><i class="bi bi-chevron-down"></i></span>
+                                        </div>
+                                    </div>
+                                    <div class="category-content">
+                                        <div class="category-content-inner">
+                                            <div class="form-group">
+                                                <label><i class="bi bi-border-radius"></i> Sub Tab Border Radius</label>
+                                                <div class="color-picker-group">
+                                                    <span class="color-label">Radius</span>
+                                                    <input type="range" id="subTabRadius" min="0" max="30" step="1" value="<%= profile.theme && profile.theme.subTabRadius ? profile.theme.subTabRadius : '12' %>" style="flex: 1;">
+                                                    <span style="font-size: 13px; font-weight: 600; color: var(--gray); min-width: 40px;" id="subTabRadiusValue"><%= profile.theme && profile.theme.subTabRadius ? profile.theme.subTabRadius : '12' %>px</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label><i class="bi bi-fill"></i> Sub Tab Background</label>
+                                                <div class="color-picker-group">
+                                                    <span class="color-label">Color</span>
+                                                    <input type="color" id="subTabBg" value="<%= profile.theme && profile.theme.subTabBg ? profile.theme.subTabBg : 'rgba(0,0,0,0.2)' %>">
+                                                    <input type="text" id="subTabBgText" value="<%= profile.theme && profile.theme.subTabBg ? profile.theme.subTabBg : 'rgba(0,0,0,0.2)' %>" placeholder="Background color">
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label><i class="bi bi-fonts"></i> Sub Tab Text Color</label>
+                                                <div class="color-picker-group">
+                                                    <span class="color-label">Color</span>
+                                                    <input type="color" id="subTabText" value="<%= profile.theme && profile.theme.subTabText ? profile.theme.subTabText : 'rgba(255,255,255,0.8)' %>">
+                                                    <input type="text" id="subTabTextValue" value="<%= profile.theme && profile.theme.subTabText ? profile.theme.subTabText : 'rgba(255,255,255,0.8)' %>" placeholder="Text color">
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label><i class="bi bi-fonts"></i> Sub Tab Label Color</label>
+                                                <div class="color-picker-group">
+                                                    <span class="color-label">Color</span>
+                                                    <input type="color" id="subTabLabel" value="<%= profile.theme && profile.theme.subTabLabel ? profile.theme.subTabLabel : 'rgba(255,255,255,0.5)' %>">
+                                                    <input type="text" id="subTabLabelValue" value="<%= profile.theme && profile.theme.subTabLabel ? profile.theme.subTabLabel : 'rgba(255,255,255,0.5)' %>" placeholder="Label color">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Category: Hover Colors -->
+                                <div class="category-section" id="categoryHover">
+                                    <div class="category-header" onclick="toggleCategory('categoryHover')">
+                                        <div class="category-header-left">
+                                            <div class="category-icon">
+                                                <i class="bi bi-hand-index"></i>
+                                            </div>
+                                            <div class="category-header-info">
+                                                <div class="category-header-title">
+                                                    Hover Colors
+                                                    <span class="badge-count">7 options</span>
+                                                </div>
+                                                <div class="category-header-desc">Custom hover effects for details & social links</div>
+                                            </div>
+                                        </div>
+                                        <div class="category-header-right">
+                                            <span class="category-chevron"><i class="bi bi-chevron-down"></i></span>
+                                        </div>
+                                    </div>
+                                    <div class="category-content">
+                                        <div class="category-content-inner">
+                                            <div class="form-group">
+                                                <label><i class="bi bi-grid"></i> Detail Item Hover</label>
+                                                <div class="color-picker-group">
+                                                    <span class="color-label">Background</span>
+                                                    <input type="color" id="detailHoverBg" value="<%= profile.theme && profile.theme.detailHoverBg ? profile.theme.detailHoverBg : 'rgba(255,255,255,0.08)' %>">
+                                                    <input type="text" id="detailHoverBgText" value="<%= profile.theme && profile.theme.detailHoverBg ? profile.theme.detailHoverBg : 'rgba(255,255,255,0.08)' %>" placeholder="Hover background">
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label><i class="bi bi-share"></i> Social Link Hover</label>
+                                                <div class="color-picker-group">
+                                                    <span class="color-label">Background</span>
+                                                    <input type="color" id="socialHoverBg" value="<%= profile.theme && profile.theme.socialHoverBg ? profile.theme.socialHoverBg : 'rgba(255,255,255,0.08)' %>">
+                                                    <input type="text" id="socialHoverBgText" value="<%= profile.theme && profile.theme.socialHoverBg ? profile.theme.socialHoverBg : 'rgba(255,255,255,0.08)' %>" placeholder="Hover background">
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label><i class="bi bi-share"></i> Platform Hover Colors</label>
+                                                <div class="hover-colors-grid">
+                                                    <div class="hover-color-item">
+                                                        <label>Twitter</label>
+                                                        <input type="color" id="twitterHover" value="<%= profile.theme && profile.theme.twitterHover ? profile.theme.twitterHover : 'rgba(29,161,242,0.7)' %>">
+                                                        <input type="text" id="twitterHoverText" value="<%= profile.theme && profile.theme.twitterHover ? profile.theme.twitterHover : 'rgba(29,161,242,0.7)' %>">
+                                                    </div>
+                                                    <div class="hover-color-item">
+                                                        <label>GitHub</label>
+                                                        <input type="color" id="githubHover" value="<%= profile.theme && profile.theme.githubHover ? profile.theme.githubHover : 'rgba(51,51,51,0.7)' %>">
+                                                        <input type="text" id="githubHoverText" value="<%= profile.theme && profile.theme.githubHover ? profile.theme.githubHover : 'rgba(51,51,51,0.7)' %>">
+                                                    </div>
+                                                    <div class="hover-color-item">
+                                                        <label>Instagram</label>
+                                                        <input type="color" id="instagramHover" value="<%= profile.theme && profile.theme.instagramHover ? profile.theme.instagramHover : 'rgba(228,64,95,0.7)' %>">
+                                                        <input type="text" id="instagramHoverText" value="<%= profile.theme && profile.theme.instagramHover ? profile.theme.instagramHover : 'rgba(228,64,95,0.7)' %>">
+                                                    </div>
+                                                    <div class="hover-color-item">
+                                                        <label>YouTube</label>
+                                                        <input type="color" id="youtubeHover" value="<%= profile.theme && profile.theme.youtubeHover ? profile.theme.youtubeHover : 'rgba(255,0,0,0.7)' %>">
+                                                        <input type="text" id="youtubeHoverText" value="<%= profile.theme && profile.theme.youtubeHover ? profile.theme.youtubeHover : 'rgba(255,0,0,0.7)' %>">
+                                                    </div>
+                                                    <div class="hover-color-item">
+                                                        <label>LinkedIn</label>
+                                                        <input type="color" id="linkedinHover" value="<%= profile.theme && profile.theme.linkedinHover ? profile.theme.linkedinHover : 'rgba(0,119,181,0.7)' %>">
+                                                        <input type="text" id="linkedinHoverText" value="<%= profile.theme && profile.theme.linkedinHover ? profile.theme.linkedinHover : 'rgba(0,119,181,0.7)' %>">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="save-button-wrapper" style="margin-top: 20px; border-top: 1px solid var(--border); padding-top: 20px;">
+                                    <button type="button" class="btn-save" id="applyThemeBtn">
+                                        <i class="bi bi-check2-circle"></i> Apply Theme
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Live Preview - Full Profile -->
+                        <div class="preview-wrapper">
+                            <div class="preview-profile-card" id="previewProfileCard">
+                                <% 
+                                    let previewAvatarUrl = '';
+                                    if (user.avatar) {
+                                        previewAvatarUrl = '/' + user.avatar;
+                                    } else if (user.avatarDiscord) {
+                                        previewAvatarUrl = 'https://cdn.discordapp.com/avatars/' + user.discordId + '/' + user.avatarDiscord + '.png';
+                                    }
+                                %>
+                                <!-- Avatar -->
+                                <div class="preview-avatar-wrapper">
+                                    <div class="preview-avatar" id="previewAvatar">
+                                        <% if (previewAvatarUrl) { %>
+                                            <img src="<%= previewAvatarUrl %>" alt="Avatar" />
+                                        <% } else { %>
+                                            <%= user.globalName ? user.globalName.charAt(0).toUpperCase() : 'U' %>
+                                        <% } %>
+                                    </div>
+                                </div>
+
+                                <!-- Name -->
+                                <div class="preview-name" id="previewName"><%= user.globalName || user.username %></div>
+                                <div class="preview-username" id="previewUsername">@<%= user.username %></div>
+
+                                <!-- Badges -->
+                                <div class="preview-badge-row">
+                                    <span class="preview-badge-verified"><i class="bi bi-check-circle-fill"></i> Verified</span>
+                                    <span class="preview-glass-badge" id="previewGlassBadge">
+                                        <i class="bi <%= profile.theme && profile.theme.glassEffect ? 'bi-window' : 'bi-square' %>"></i>
+                                        <%= profile.theme && profile.theme.glassEffect ? 'Glass' : 'Solid' %>
+                                    </span>
+                                </div>
+
+                                <!-- Bio -->
+                                <div class="preview-bio-section" id="previewBioSection">
+                                    <h3><i class="bi bi-chat"></i> About</h3>
+                                    <p id="previewBioText"><%= profile.bio || 'This user hasn\'t added a bio yet.' %></p>
+                                </div>
+
+                                <!-- Sub Tabs -->
+                                <div class="preview-sub-tabs" id="previewSubTabs">
+                                    <button class="preview-sub-tab active" data-tab="details">
+                                        <i class="bi bi-grid"></i> Details
+                                    </button>
+                                    <button class="preview-sub-tab" data-tab="social">
+                                        <i class="bi bi-share"></i> Social
+                                    </button>
+                                </div>
+
+                                <!-- Details Panel -->
+                                <div id="previewDetailsPanel">
+                                    <div class="preview-details-grid" id="previewDetailsGrid">
+                                        <div class="preview-detail-item" id="previewDetail1">
+                                            <div class="preview-detail-label"><i class="bi bi-calendar3"></i> Joined</div>
+                                            <div class="preview-detail-value"><%= profile ? new Date(profile.createdAt).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : 'N/A' %></div>
+                                        </div>
+                                        <div class="preview-detail-item" id="previewDetail2">
+                                            <div class="preview-detail-label"><i class="bi bi-link-45deg"></i> Profile URL</div>
+                                            <div class="preview-detail-value" style="color: #8B9CF7;">/<%= user.customUrl %></div>
+                                        </div>
+                                        <div class="preview-detail-item" id="previewDetail3">
+                                            <div class="preview-detail-label"><i class="bi bi-geo-alt"></i> Location</div>
+                                            <div class="preview-detail-value"><%= profile.location || 'Not set' %></div>
+                                        </div>
+                                        <div class="preview-detail-item" id="previewDetail4">
+                                            <div class="preview-detail-label"><i class="bi bi-hash"></i> Discord ID</div>
+                                            <div class="preview-detail-value" style="font-size: 11px; opacity: 0.5;"><%= user.discordId %></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Social Panel -->
+                                <div id="previewSocialPanel" style="display: none;">
+                                    <div class="preview-social-links" id="previewSocialLinks">
+                                        <% if (profile.twitter) { %>
+                                            <a href="#" class="preview-social-link twitter" id="previewTwitter">
+                                                <i class="bi bi-twitter"></i> Twitter
+                                            </a>
+                                        <% } %>
+                                        <% if (profile.github) { %>
+                                            <a href="#" class="preview-social-link github" id="previewGithub">
+                                                <i class="bi bi-github"></i> GitHub
+                                            </a>
+                                        <% } %>
+                                        <% if (profile.instagram) { %>
+                                            <a href="#" class="preview-social-link instagram" id="previewInstagram">
+                                                <i class="bi bi-instagram"></i> Instagram
+                                            </a>
+                                        <% } %>
+                                        <% if (profile.youtube) { %>
+                                            <a href="#" class="preview-social-link youtube" id="previewYoutube">
+                                                <i class="bi bi-youtube"></i> YouTube
+                                            </a>
+                                        <% } %>
+                                        <% if (profile.linkedin) { %>
+                                            <a href="#" class="preview-social-link linkedin" id="previewLinkedin">
+                                                <i class="bi bi-linkedin"></i> LinkedIn
+                                            </a>
+                                        <% } %>
+                                        <% if (!profile.twitter && !profile.github && !profile.instagram && !profile.youtube && !profile.linkedin) { %>
+                                            <span style="color: rgba(255,255,255,0.3); font-size: 13px; padding: 10px; text-align: center; width: 100%;">
+                                                <i class="bi bi-link-45deg"></i> No social links added
+                                            </span>
+                                        <% } %>
+                                    </div>
+                                </div>
+
+                            
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Tab -->
+            <div id="settingsTab" class="tab-content">
+                <div class="edit-card">
+                    <div class="edit-card-header">
+                        <h2 class="edit-card-title"><i class="bi bi-gear"></i> Settings</h2>
+                        <p class="edit-card-subtitle">Account settings and preferences.</p>
+                    </div>
+                    <div style="padding: 40px 20px; text-align: center; color: var(--gray);">
+                        <i class="bi bi-tools" style="font-size: 48px; display: block; margin-bottom: 16px;"></i>
+                        <p style="font-size: 16px;">More settings coming soon...</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script>
+        // ===== COLLAPSIBLE CATEGORIES =====
+        function toggleCategory(categoryId) {
+            const section = document.getElementById(categoryId);
+            if (!section) return;
+            section.classList.toggle('open');
+        }
+
+        // ===== TAB SWITCHING =====
+        function switchTab(tabId) {
+            document.querySelectorAll('.nav-item[data-tab]').forEach(item => {
+                item.classList.remove('active');
+            });
+
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            const selectedTab = document.getElementById(tabId + 'Tab');
+            if (selectedTab) {
+                selectedTab.classList.add('active');
+            }
+
+            const navItem = document.querySelector(`.nav-item[data-tab="${tabId}"]`);
+            if (navItem) {
+                navItem.classList.add('active');
+            }
+
+            const titles = {
+                'profile': 'Profile <span>Manage your profile</span>',
+                'theme': 'Theme <span>Customize your profile</span>',
+                'settings': 'Settings <span>Account preferences</span>'
+            };
+            document.getElementById('pageTitle').innerHTML = titles[tabId] || 'Dashboard';
+        }
+
+        document.querySelectorAll('.nav-item[data-tab]').forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                const tabId = this.dataset.tab;
+                switchTab(tabId);
+                if (window.innerWidth <= 768) {
+                    toggleSidebar();
+                }
+            });
+        });
+
+        // ===== THEME PREVIEW =====
+        const previewCard = document.getElementById('previewProfileCard');
+        const previewAvatar = document.getElementById('previewAvatar');
+        const previewName = document.getElementById('previewName');
+        const previewUsername = document.getElementById('previewUsername');
+        const previewGlassBadge = document.getElementById('previewGlassBadge');
+        const previewBioSection = document.getElementById('previewBioSection');
+        const previewBioText = document.getElementById('previewBioText');
+        const previewSubTabs = document.getElementById('previewSubTabs');
+        const previewDetailsGrid = document.getElementById('previewDetailsGrid');
+        const previewSocialLinks = document.getElementById('previewSocialLinks');
+        const previewDetailsPanel = document.getElementById('previewDetailsPanel');
+        const previewSocialPanel = document.getElementById('previewSocialPanel');
+
+        const cardColor = document.getElementById('cardColor');
+        const cardColorText = document.getElementById('cardColorText');
+        const cardTransparency = document.getElementById('cardTransparency');
+        const cardBlur = document.getElementById('cardBlur');
+        const glassToggle = document.getElementById('glassToggle');
+        const glassControls = document.getElementById('glassControls');
+        const glassStatus = document.getElementById('glassStatus');
+        const borderRadius = document.getElementById('borderRadius');
+
+        // Sub Tab elements
+        const subTabRadius = document.getElementById('subTabRadius');
+        const subTabRadiusValue = document.getElementById('subTabRadiusValue');
+        const subTabBg = document.getElementById('subTabBg');
+        const subTabBgText = document.getElementById('subTabBgText');
+        const subTabText = document.getElementById('subTabText');
+        const subTabTextValue = document.getElementById('subTabTextValue');
+        const subTabLabel = document.getElementById('subTabLabel');
+        const subTabLabelValue = document.getElementById('subTabLabelValue');
+
+        // Hover color elements
+        const detailHoverBg = document.getElementById('detailHoverBg');
+        const detailHoverBgText = document.getElementById('detailHoverBgText');
+        const socialHoverBg = document.getElementById('socialHoverBg');
+        const socialHoverBgText = document.getElementById('socialHoverBgText');
+        const twitterHover = document.getElementById('twitterHover');
+        const twitterHoverText = document.getElementById('twitterHoverText');
+        const githubHover = document.getElementById('githubHover');
+        const githubHoverText = document.getElementById('githubHoverText');
+        const instagramHover = document.getElementById('instagramHover');
+        const instagramHoverText = document.getElementById('instagramHoverText');
+        const youtubeHover = document.getElementById('youtubeHover');
+        const youtubeHoverText = document.getElementById('youtubeHoverText');
+        const linkedinHover = document.getElementById('linkedinHover');
+        const linkedinHoverText = document.getElementById('linkedinHoverText');
+
+        // Preview sub tab switching
+        document.querySelectorAll('.preview-sub-tab').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.preview-sub-tab').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                const tab = this.dataset.tab;
+                if (tab === 'details') {
+                    previewDetailsPanel.style.display = 'block';
+                    previewSocialPanel.style.display = 'none';
+                } else {
+                    previewDetailsPanel.style.display = 'none';
+                    previewSocialPanel.style.display = 'block';
+                }
+            });
+        });
+
+        function isLightColor(hex) {
+            if (!hex) return false;
+            if (hex.startsWith('rgba')) {
+                const matches = hex.match(/[\d.]+/g);
+                if (matches) {
+                    const r = parseFloat(matches[0]);
+                    const g = parseFloat(matches[1]);
+                    const b = parseFloat(matches[2]);
+                    const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+                    return brightness > 155;
+                }
+                return false;
+            }
+            const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+            if (!result) return false;
+            const r = parseInt(result[1], 16);
+            const g = parseInt(result[2], 16);
+            const b = parseInt(result[3], 16);
+            const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+            return brightness > 155;
+        }
+
+        function updatePreview() {
+            const color = cardColor.value;
+            const transparency = cardTransparency ? parseInt(cardTransparency.value) / 100 : 1;
+            const blur = cardBlur ? cardBlur.value + 'px' : '0px';
+            const radius = borderRadius ? borderRadius.value + 'px' : '20px';
+            const isGlass = glassToggle.checked;
+
+            // Update preview card - matches profile.ejs exactly
+            previewCard.style.borderRadius = radius;
+
+            if (isGlass) {
+                previewCard.style.background = `rgba(0, 0, 0, ${transparency})`;
+                previewCard.style.backdropFilter = `blur(${blur})`;
+                previewCard.style.webkitBackdropFilter = `blur(${blur})`;
+                previewCard.style.border = '1px solid rgba(255,255,255,0.1)';
+                previewCard.style.boxShadow = '0 8px 32px rgba(0,0,0,0.3)';
+            } else {
+                previewCard.style.background = color;
+                previewCard.style.backdropFilter = 'none';
+                previewCard.style.webkitBackdropFilter = 'none';
+                previewCard.style.border = '1px solid rgba(255,255,255,0.08)';
+                previewCard.style.boxShadow = '0 8px 32px rgba(0,0,0,0.3)';
+            }
+
+            // Adjust text colors
+            const isLight = isLightColor(isGlass ? `rgba(0,0,0,${transparency})` : color);
+            const textColor = isLight ? '#1a1a1a' : '#ffffff';
+            const textColorDim = isLight ? 'rgba(0,0,0,0.6)' : 'rgba(255,255,255,0.7)';
+            const textColorDim2 = isLight ? 'rgba(0,0,0,0.4)' : 'rgba(255,255,255,0.5)';
+            const bioBg = isLight ? 'rgba(0,0,0,0.05)' : 'rgba(0,0,0,0.3)';
+            const bioColor = isLight ? 'rgba(0,0,0,0.8)' : 'rgba(255,255,255,0.9)';
+            const borderColor = isLight ? 'rgba(0,0,0,0.06)' : 'rgba(255,255,255,0.06)';
+            
+            // Update name
+            previewName.style.color = textColor;
+            previewUsername.style.color = textColorDim;
+
+            // Update bio section
+            previewBioSection.style.background = bioBg;
+            previewBioSection.style.border = `1px solid ${borderColor}`;
+            previewBioText.style.color = bioColor;
+
+            // Update sub tabs
+            previewSubTabs.style.background = subTabBg.value || 'rgba(0,0,0,0.2)';
+            document.querySelectorAll('.preview-sub-tab').forEach(btn => {
+                btn.style.color = subTabLabel.value || 'rgba(255,255,255,0.5)';
+                if (btn.classList.contains('active')) {
+                    btn.style.color = subTabText.value || 'rgba(255,255,255,0.8)';
+                    btn.style.background = 'rgba(255,255,255,0.08)';
+                }
+            });
+
+            // Update details grid
+            const detailItems = document.querySelectorAll('.preview-detail-item');
+            detailItems.forEach(item => {
+                item.style.background = subTabBg.value || 'rgba(0,0,0,0.2)';
+                item.style.borderRadius = subTabRadius.value + 'px' || '8px';
+                const label = item.querySelector('.preview-detail-label');
+                const value = item.querySelector('.preview-detail-value');
+                if (label) label.style.color = subTabLabel.value || 'rgba(255,255,255,0.4)';
+                if (value && !value.style.color?.includes('#8B9CF7')) {
+                    value.style.color = subTabText.value || 'rgba(255,255,255,0.8)';
+                }
+            });
+
+            // Update social links
+            const socialLinks = document.querySelectorAll('.preview-social-link');
+            socialLinks.forEach(link => {
+                link.style.background = subTabBg.value || 'rgba(0,0,0,0.2)';
+                link.style.borderRadius = subTabRadius.value + 'px' || '8px';
+                link.style.color = subTabLabel.value || 'rgba(255,255,255,0.5)';
+                // Platform specific hover colors will be applied via CSS
+            });
+
+            // Update glass badge
+            previewGlassBadge.innerHTML = `
+                <i class="bi ${isGlass ? 'bi-window' : 'bi-square'}"></i>
+                ${isGlass ? 'Glass' : 'Solid'}
+            `;
+
+            // Update status
+            glassStatus.textContent = isGlass ? 'ON' : 'OFF';
+            glassStatus.className = 'toggle-status ' + (isGlass ? 'on' : 'off');
+        }
+
+        // Event Listeners
+        cardColor.addEventListener('input', function() {
+            cardColorText.value = this.value;
+            updatePreview();
+        });
+
+        cardColorText.addEventListener('input', function() {
+            if (this.value.match(/^#?[0-9A-F]{6}$/i) || this.value.startsWith('rgba')) {
+                cardColor.value = this.value;
+                updatePreview();
+            }
+        });
+
+        if (cardTransparency) {
+            cardTransparency.addEventListener('input', function() {
+                document.getElementById('transparencyValue').textContent = this.value + '%';
+                updatePreview();
+            });
+        }
+
+        if (cardBlur) {
+            cardBlur.addEventListener('input', function() {
+                document.getElementById('blurValue').textContent = this.value + 'px';
+                updatePreview();
+            });
+        }
+
+        if (borderRadius) {
+            borderRadius.addEventListener('input', function() {
+                document.getElementById('radiusValue').textContent = this.value + 'px';
+                document.querySelectorAll('.radius-preset-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                    if (parseInt(btn.dataset.radius) === parseInt(this.value)) {
+                        btn.classList.add('active');
+                    }
+                });
+                updatePreview();
+            });
+        }
+
+        // Sub Tab event listeners
+        if (subTabRadius) {
+            subTabRadius.addEventListener('input', function() {
+                subTabRadiusValue.textContent = this.value + 'px';
+                updatePreview();
+            });
+        }
+
+        if (subTabBg) {
+            subTabBg.addEventListener('input', function() {
+                subTabBgText.value = this.value;
+                updatePreview();
+            });
+            subTabBgText.addEventListener('input', function() {
+                if (this.value.match(/^#?[0-9A-F]{6}$/i) || this.value.startsWith('rgba')) {
+                    subTabBg.value = this.value;
+                    updatePreview();
+                }
+            });
+        }
+
+        if (subTabText) {
+            subTabText.addEventListener('input', function() {
+                subTabTextValue.value = this.value;
+                updatePreview();
+            });
+            subTabTextValue.addEventListener('input', function() {
+                if (this.value.match(/^#?[0-9A-F]{6}$/i) || this.value.startsWith('rgba')) {
+                    subTabText.value = this.value;
+                    updatePreview();
+                }
+            });
+        }
+
+        if (subTabLabel) {
+            subTabLabel.addEventListener('input', function() {
+                subTabLabelValue.value = this.value;
+                updatePreview();
+            });
+            subTabLabelValue.addEventListener('input', function() {
+                if (this.value.match(/^#?[0-9A-F]{6}$/i) || this.value.startsWith('rgba')) {
+                    subTabLabel.value = this.value;
+                    updatePreview();
+                }
+            });
+        }
+
+        // Hover color event listeners
+        function setupHoverInput(colorInput, textInput) {
+            if (!colorInput || !textInput) return;
+            colorInput.addEventListener('input', function() {
+                textInput.value = this.value;
+            });
+            textInput.addEventListener('input', function() {
+                if (this.value.match(/^#?[0-9A-F]{6}$/i) || this.value.startsWith('rgba')) {
+                    colorInput.value = this.value;
+                }
+            });
+        }
+
+        setupHoverInput(detailHoverBg, detailHoverBgText);
+        setupHoverInput(socialHoverBg, socialHoverBgText);
+        setupHoverInput(twitterHover, twitterHoverText);
+        setupHoverInput(githubHover, githubHoverText);
+        setupHoverInput(instagramHover, instagramHoverText);
+        setupHoverInput(youtubeHover, youtubeHoverText);
+        setupHoverInput(linkedinHover, linkedinHoverText);
+
+        // Glass Toggle
+        glassToggle.addEventListener('change', function() {
+            const status = this.checked ? 'ON' : 'OFF';
+            glassStatus.textContent = status;
+            glassStatus.className = 'toggle-status ' + (this.checked ? 'on' : 'off');
+            
+            const glassCategory = document.getElementById('categoryGlass');
+            const statusBadge = glassCategory.querySelector('.category-status');
+            if (statusBadge) {
+                statusBadge.textContent = status;
+                statusBadge.className = 'category-status ' + (this.checked ? 'active' : '');
+            }
+            
+            if (this.checked) {
+                glassControls.classList.remove('hidden');
+            } else {
+                glassControls.classList.add('hidden');
+            }
+            updatePreview();
+        });
+
+        // Set Radius
+        function setRadius(radius) {
+            borderRadius.value = radius;
+            document.getElementById('radiusValue').textContent = radius + 'px';
+            document.querySelectorAll('.radius-preset-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (parseInt(btn.dataset.radius) === radius) {
+                    btn.classList.add('active');
+                }
+            });
+            updatePreview();
+        }
+
+        // Preset Colors
+        function setPreset(color, transparency, blur) {
+            cardColor.value = color;
+            cardColorText.value = color;
+            if (cardTransparency) {
+                cardTransparency.value = transparency;
+                document.getElementById('transparencyValue').textContent = transparency + '%';
+            }
+            if (cardBlur) {
+                cardBlur.value = blur;
+                document.getElementById('blurValue').textContent = blur + 'px';
+            }
+            updatePreview();
+            showToast('Preset applied! Click "Apply Theme" to save.', 'success');
+        }
+
+        // Apply Theme
+        document.getElementById('applyThemeBtn').addEventListener('click', async function() {
+            const btn = this;
+            const originalText = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = '<i class="bi bi-arrow-repeat spin"></i> Applying...';
+
+            const themeData = {
+                cardColor: cardColor.value,
+                glassEffect: glassToggle.checked,
+                borderRadius: borderRadius.value + 'px',
+                subTabRadius: subTabRadius.value + 'px',
+                subTabBg: subTabBg.value,
+                subTabText: subTabText.value,
+                subTabLabel: subTabLabel.value,
+                detailHoverBg: detailHoverBg.value,
+                socialHoverBg: socialHoverBg.value,
+                twitterHover: twitterHover.value,
+                githubHover: githubHover.value,
+                instagramHover: instagramHover.value,
+                youtubeHover: youtubeHover.value,
+                linkedinHover: linkedinHover.value
+            };
+
+            if (glassToggle.checked) {
+                themeData.cardTransparency = (parseInt(cardTransparency.value) / 100).toString();
+                themeData.cardBlur = cardBlur.value + 'px';
+            }
+
+            try {
+                const response = await fetch('/update-theme', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(themeData)
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showToast('✅ Theme applied successfully!', 'success');
+                } else {
+                    showToast('❌ Error: ' + result.error, 'error');
+                }
+            } catch (error) {
+                showToast('❌ Error applying theme. Please try again.', 'error');
+                console.error('Theme error:', error);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = originalText;
+            }
+        });
+
+        // ===== UTILITY FUNCTIONS =====
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+            document.getElementById('sidebarOverlay').classList.toggle('active');
+        }
+
+        function copyUrl() {
+            const input = document.getElementById('profileUrl');
+            input.select();
+            document.execCommand('copy');
+            showToast('Profile URL copied to clipboard!', 'success');
+        }
+
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type === 'error' ? 'toast-error' : ''}`;
+            const icon = type === 'error' ? 'bi-x-circle-fill' : 'bi-check-circle-fill';
+            toast.innerHTML = `
+                <i class="bi ${icon}" style="font-size: 20px;"></i>
+                <span>${message}</span>
+            `;
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.classList.add('toast-hide');
+                setTimeout(() => toast.remove(), 350);
+            }, 3200);
+        }
+
+        // ===== AVATAR UPLOAD =====
+        const avatarTrigger = document.getElementById('avatarTrigger');
+        const avatarInput = document.getElementById('avatarInput');
+        const avatarImg = document.getElementById('avatarImg');
+        const avatarPlaceholder = document.getElementById('avatarPlaceholder');
+
+        if (avatarTrigger) {
+            avatarTrigger.addEventListener('click', () => {
+                avatarInput.click();
+            });
+        }
+
+        if (avatarInput) {
+            avatarInput.addEventListener('change', function(e) {
+                const file = this.files[0];
+                if (!file) return;
+
+                if (!file.type.startsWith('image/')) {
+                    showToast('Please select a valid image.', 'error');
+                    this.value = '';
+                    return;
+                }
+
+                if (file.size > 5 * 1024 * 1024) {
+                    showToast('Image size must be less than 5MB.', 'error');
+                    this.value = '';
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = function(ev) {
+                    if (avatarImg) {
+                        avatarImg.src = ev.target.result;
+                        avatarImg.style.display = 'block';
+                    }
+                    if (avatarPlaceholder) {
+                        avatarPlaceholder.style.display = 'none';
+                    }
+                    // Also update preview avatar
+                    const previewAvatar = document.querySelector('.preview-avatar');
+                    if (previewAvatar) {
+                        previewAvatar.innerHTML = `<img src="${ev.target.result}" alt="Avatar" />`;
+                    }
+                    showToast('Avatar selected. Click Save to upload.', 'success');
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        // ===== FORM SUBMISSION =====
+        document.getElementById('profileForm').addEventListener('submit', function(e) {
+            const btn = document.getElementById('saveBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="bi bi-arrow-repeat spin"></i> Saving...';
+        });
+
+        // ===== SPIN ANIMATION =====
+        const styleSheet = document.createElement('style');
+        styleSheet.textContent = `
+            @keyframes spin {
+                from { transform: rotate(0deg); }
+                to { transform: rotate(360deg); }
+            }
+            .spin {
+                animation: spin 1s linear infinite;
+                display: inline-block;
+            }
+        `;
+        document.head.appendChild(styleSheet);
+
+        // ===== CHECK SAVED PARAM =====
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('saved') === 'true') {
+            showToast('Profile saved successfully!', 'success');
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
+
+        // ===== INITIAL PREVIEW UPDATE =====
+        setTimeout(updatePreview, 100);
+    </script>
+</body>
+</html>

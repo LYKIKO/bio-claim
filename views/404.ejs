@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Not Found</title>
+    <link rel="preconnect" href="https://rsms.me/">
+    <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 500px;
+            width: 100%;
+            background: #1a1a1a;
+            padding: 48px 40px;
+            border-radius: 16px;
+            border: 1px solid #2a2a2a;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+        }
+
+        .icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: #888;
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 8px;
+        }
+
+        .url-display {
+            background: #111;
+            padding: 16px;
+            border-radius: 8px;
+            color: #5865F2;
+            font-size: 18px;
+            margin: 20px 0 24px;
+            border: 1px solid #2a2a2a;
+            word-break: break-all;
+            font-weight: 600;
+        }
+
+        .url-display .prefix {
+            color: #666;
+            font-weight: 400;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 14px 32px;
+            background: #5865F2;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+            font-family: inherit;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background: #4752C4;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(88, 101, 242, 0.3);
+        }
+
+        .btn-secondary {
+            display: inline-block;
+            padding: 14px 32px;
+            background: transparent;
+            color: #888;
+            border: 1px solid #2a2a2a;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s;
+            margin-left: 12px;
+            font-family: inherit;
+            cursor: pointer;
+        }
+
+        .btn-secondary:hover {
+            border-color: #444;
+            color: #fff;
+        }
+
+        .actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 8px;
+        }
+
+        .suggestions {
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid #2a2a2a;
+        }
+
+        .suggestions p {
+            color: #555;
+            font-size: 13px;
+            margin-bottom: 4px;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 32px 20px;
+            }
+
+            .btn, .btn-secondary {
+                display: block;
+                width: 100%;
+                margin: 8px 0;
+            }
+
+            .btn-secondary {
+                margin-left: 0;
+            }
+
+            .actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="icon">🔍</div>
+        <h1>Profile Not Found</h1>
+        <p class="subtitle">
+            This profile doesn't exist yet.
+        </p>
+
+        
+        <% if (!user) { %>
+            <p style="color: #888; font-size: 14px; margin-bottom: 20px;">
+                Want to claim this URL? Sign in with Discord.
+            </p>
+            <div class="actions">
+                <a href="/auth/discord" class="btn">🔷 Auth with Discord</a>
+                <a href="/" class="btn-secondary">🏠 Home</a>
+            </div>
+        <% } else { %>
+            <p style="color: #888; font-size: 14px; margin-bottom: 20px;">
+                You're logged in as <strong style="color: #fff;"><%= user.globalName || user.username %></strong>
+            </p>
+            <div class="actions">
+                <a href="/dashboard" class="btn">📊 Go to Dashboard</a>
+                <a href="/" class="btn-secondary">🏠 Home</a>
+            </div>
+        <% } %>
+    </div>
+</body>
+</html>
