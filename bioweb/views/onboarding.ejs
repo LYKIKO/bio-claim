@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Set Your Profile URL</title>
+    <link rel="preconnect" href="https://rsms.me/">
+    <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 500px;
+            width: 100%;
+            background: #1a1a1a;
+            padding: 48px 40px;
+            border-radius: 16px;
+            border: 1px solid #2a2a2a;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+        }
+
+        .logo {
+            text-align: center;
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #5865F2, #7289DA);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #888;
+            font-size: 15px;
+            margin-bottom: 32px;
+            line-height: 1.6;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background: #222;
+            padding: 16px 20px;
+            border-radius: 12px;
+            margin-bottom: 32px;
+            border: 1px solid #2a2a2a;
+        }
+
+        .user-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: #5865F2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 700;
+            color: white;
+            flex-shrink: 0;
+            overflow: hidden;
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .user-name {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .user-email {
+            font-size: 13px;
+            color: #888;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: #aaa;
+        }
+
+        .url-input-wrapper {
+            display: flex;
+            align-items: center;
+            background: #111;
+            border: 1px solid #2a2a2a;
+            border-radius: 8px;
+            padding: 0 16px;
+            transition: border-color 0.3s;
+        }
+
+        .url-input-wrapper:focus-within {
+            border-color: #5865F2;
+        }
+
+        .url-prefix {
+            color: #666;
+            font-size: 14px;
+            white-space: nowrap;
+            padding-right: 8px;
+        }
+
+        .url-input-wrapper input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            padding: 14px 0;
+            font-size: 16px;
+            color: white;
+            outline: none;
+            font-family: inherit;
+        }
+
+        .url-input-wrapper input::placeholder {
+            color: #444;
+        }
+
+        .url-hint {
+            font-size: 13px;
+            color: #666;
+            margin-top: 8px;
+        }
+
+        .url-hint .example {
+            color: #5865F2;
+            font-weight: 500;
+        }
+
+        .error-message {
+            background: #2a0a0a;
+            border: 1px solid #DC2626;
+            color: #DC2626;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            margin-bottom: 20px;
+            display: <%= error ? 'block' : 'none' %>;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 16px;
+            background: #5865F2;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .btn-primary:hover {
+            background: #4752C4;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(88, 101, 242, 0.3);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            width: 100%;
+            padding: 14px;
+            background: transparent;
+            color: #666;
+            border: 1px solid #2a2a2a;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: inherit;
+            margin-top: 12px;
+        }
+
+        .btn-secondary:hover {
+            border-color: #444;
+            color: #aaa;
+        }
+
+        .features-row {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-top: 32px;
+            padding-top: 32px;
+            border-top: 1px solid #2a2a2a;
+        }
+
+        .feature-item {
+            text-align: center;
+        }
+
+        .feature-item .icon {
+            font-size: 24px;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .feature-item .label {
+            font-size: 12px;
+            color: #555;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 32px 20px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .url-input-wrapper input {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">🎯</div>
+        <h1>Choose Your URL</h1>
+        <p class="subtitle">
+            Pick a unique URL that will be your profile address
+        </p>
+
+        <div class="user-info">
+            <div class="user-avatar">
+                <% if (user.avatar) { %>
+                    <img src="https://cdn.discordapp.com/avatars/<%= user.discordId %>/<%= user.avatar %>.png" alt="Avatar">
+                <% } else { %>
+                    <%= user.globalName ? user.globalName.charAt(0).toUpperCase() : 'U' %>
+                <% } %>
+            </div>
+            <div>
+                <div class="user-name"><%= user.globalName || user.username %></div>
+                <div class="user-email">@<%= user.username %></div>
+            </div>
+        </div>
+
+        <% if (error) { %>
+            <div class="error-message"><%= error %></div>
+        <% } %>
+
+        <form action="/onboarding" method="POST">
+            <div class="form-group">
+                <label for="customUrl">Your Profile URL</label>
+                <div class="url-input-wrapper">
+                    <span class="url-prefix">https://bioweb-six.vercel.app/</span>
+                    <input 
+                        type="text" 
+                        id="customUrl" 
+                        name="customUrl" 
+                        placeholder="your-name"
+                        required
+                        autofocus
+                        pattern="^[a-zA-Z0-9_-]+$"
+                        title="Only letters, numbers, dashes, and underscores"
+                        value="<%= user.username %>"
+                    >
+                </div>
+                <div class="url-hint">
+                    Letters, numbers, dashes, and underscores only. 
+                    Example: <span class="example">kiko</span>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-primary">Claim Your URL</button>
+        </form>
+
+        <a href="/logout" class="btn-secondary">Logout</a>
+
+        <div class="features-row">
+            <div class="feature-item">
+                <span class="icon">🔗</span>
+                <span class="label">Custom Link</span>
+            </div>
+            <div class="feature-item">
+                <span class="icon">✅</span>
+                <span class="label">Verified</span>
+            </div>
+            <div class="feature-item">
+                <span class="icon">📱</span>
+                <span class="label">Shareable</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
